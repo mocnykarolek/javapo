@@ -9,10 +9,12 @@ public class Human extends Animal{
     private final int SOUTH = 3;
     private final int WEST = 4;
 //    boolean specialAbilityActivated;
-    int roundOfActivation;
-    int currentRound;
-    int elixirBonus;
-    int cooldownLeft;
+    private int roundOfActivation;
+    private int currentRound;
+    private int elixirBonus;
+    private int cooldownLeft;
+    private boolean elixirActive = false;
+
     public Human(int x, int y, World world){
         world.addLog("Human created");
 
@@ -27,19 +29,43 @@ public class Human extends Animal{
         this.strength = 5+ elixirBonus;
 
     }
+    public Human(int x, int y, World world, int age, int strength, boolean elixirActive, int elixirBonus, int roundOfActivation, int cooldownLeft){
+        world.addLog("Human Loaded");
+
+        super(x, y,world);
+        this.age = age;
+        this.strength = strength;
+        this.elixirActive = elixirActive;
+        this.Color = "pink";
+        this.initiative = 4;
+        this.age = 0;
+        this.alive = true;
+        world.setSpacialAbility(false);
+        this.elixirBonus = elixirBonus;
+        this.cooldownLeft = cooldownLeft;
+        this.strength = 5 + elixirBonus;
+        this.roundOfActivation = roundOfActivation;
+
+    }
 
     public void newOrganism(int ch_x, int ch_y){}
 
+    public String saveHuman(){
+        return elixirActive + " " + elixirBonus +  " " + roundOfActivation + " " + cooldownLeft;
+    }
+
     public void handleSpecialAbility(){
-        if(world.getSpecialAbility() && this.elixirBonus > 0){
-            elixirBonus--;
-        }
+        if(elixirActive == true) {
+            if (elixirActive == true) {
+                elixirBonus--;
+            }
 
-        if(world.getSpecialAbility() && currentRound - roundOfActivation >= 5){
-            world.setSpacialAbility(false);
+            if (currentRound - roundOfActivation >= 5) {
+                elixirActive = false;
 
-            cooldownLeft = 5;
-            world.addLog("No elixir left");
+                cooldownLeft = 5;
+                world.addLog("No elixir left");
+            }
         }
     }
 
@@ -48,16 +74,16 @@ public class Human extends Animal{
     }
 
     public void action(){
+        currentRound = world.getCurrentRound();
 
-
-        if(world.humanSpecialAbilityActivated() != -1 && world.getSpecialAbility() != true && cooldownLeft == 0){
-            world.setSpacialAbility(true);
+        if(world.getSpecialAbility() == true && cooldownLeft == 0 && elixirActive == false){
+            elixirActive = true;
             elixirBonus = 5;
             world.addLog("Czlowiek wypil magiczny eliksir");
-            roundOfActivation = world.humanSpecialAbilityActivated();
+            roundOfActivation = currentRound;
         }
         if(cooldownLeft >0) cooldownLeft--;
-        currentRound = world.getCurrentRound();
+
 
         System.out.println("" + cooldownLeft + "\n");
         System.out.println("" + roundOfActivation + "\n");
@@ -74,7 +100,7 @@ public class Human extends Animal{
 //        Vector2d new_cords = this->cords;
         Vector2d new_cords = new Vector2d(this.x, this.y);
         int nextMove = world.getHumanDir();
-        if(nextMove == NORTH && this.y > 1){
+        if(nextMove == NORTH && this.y > 0){
             new_cords.y--;
             world.addLog("Czlowiek idzie do gory");
         }else if(nextMove == EAST && this.x < 20){
@@ -83,7 +109,7 @@ public class Human extends Animal{
         }else if(nextMove == SOUTH && this.y < 20){
             world.addLog("Czlowiek idzie w dol");
             new_cords.y++;
-        } else if(nextMove == WEST && this.x > 1){
+        } else if(nextMove == WEST && this.x > 0){
             world.addLog("Czlowiek idzie w lewo");
             new_cords.x--;
         }

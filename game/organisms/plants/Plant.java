@@ -37,7 +37,7 @@ public abstract class Plant extends Organisms {
         return true;
     }
 
-    private void reproduction_attempt(Organisms o) {
+    protected void reproduction_attempt(Organisms o) {
 
         ArrayList<Vector2d> freeCells = world.getFreeNeighbours(new Vector2d(o.getX(), o.getY()));
 

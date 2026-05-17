@@ -69,6 +69,7 @@ public class Window {
                     Color colorToDraw = switch (gridOrganisms[y][x].getColor()){
                         case "pink" -> Color.pink;
                         case "grey" -> Color.darkGray;
+                        case "sheepy" -> Color.getHSBColor(0.12f, 0.10f, 0.95f);
                         case "orange" -> Color.orange;
                         case "blue" -> Color.BLUE;
                         case "magenta" -> Color.magenta;
@@ -104,6 +105,10 @@ public class Window {
 
 
         JButton button = new JButton("Nowa tura");
+        JButton Load_button = new JButton("Load");
+        JButton Save_button = new JButton("Save");
+
+
 
         board = new JPanel();
         board.setLayout(new GridLayout(ROWS, COLUMNS));
@@ -148,6 +153,8 @@ public class Window {
 
         // adding button in JFrame
         JPanel southPanel = new JPanel();
+        southPanel.add(Load_button);
+        southPanel.add(Save_button);
         southPanel.add(button);
         JLabel txt = new JLabel();
         txt.setText("Karol Oledzki 208226");
@@ -165,7 +172,12 @@ public class Window {
 
         // 400 width and 500 height
         frame.setSize(800, 600);
-
+        Load_button.addActionListener(e -> {
+            world.LoadFromFile();
+        });
+        Save_button.addActionListener(e -> {
+            world.SaveToFile();
+        });
 
         button.addActionListener(e -> {
             if((humanMove != "null" && humanMove != "special" ) || !world.isHumanAlive()){

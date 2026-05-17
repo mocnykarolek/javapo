@@ -43,7 +43,7 @@ public abstract class Organisms {
         return false;
     }
 
-    public Vector2d randomMove(){
+    protected Vector2d randomMove(){
 
         int side;
         int dir;
